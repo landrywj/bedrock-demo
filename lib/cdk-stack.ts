@@ -1,16 +1,65 @@
-import * as cdk from 'aws-cdk-lib/core';
+import * as cdk from 'aws-cdk-lib';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as path from 'path';
+import { AgentConfig } from './config';
+import { AgentLambda } from './constructs/agent-lambda';
+import { BedrockAgent } from './constructs/bedrock-agent';
+import { ActionGroup } from './constructs/action-group';
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    const actionHandlerLambda = new AgentLambda(this, 'ActionHandler', {
+      functionName: 'bedrock-agent-action-handler',
+      codePath: path.join(__dirname, '../lambda/action-handler')
+    });
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'CdkQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    const agent = new BedrockAgent(this, 'BedrockAgent', {
+      agentName: AgentConfig.agentName,
+      instruction: AgentConfig.instruction,
+      foundationModel: AgentConfig.foundationModel,
+      idleSessionTTL: AgentConfig.idleSessionTTL
+    });
+
+    actionHandlerLambda.function.grantInvoke(agent.agentRole);
+
+    actionHandlerLambda.function.addPermission('BedrockInvoke', {
+      principal: new cdk.aws_iam.ServicePrincipal('bedrock.amazonaws.com'),
+      sourceArn: agent.agent.attrAgentArn
+    });
+
+    const actionGroup = new ActionGroup(this, 'CustomerServiceActions', {
+      agentId: agent.agent.attrAgentId,
+      agentVersion: 'DRAFT',
+      actionGroupName: 'CustomerServiceActionGroup',
+      description: 'Actions for customer service operations',
+      lambdaFunction: actionHandlerLambda.function,
+      schemaPath: path.join(__dirname, '../schemas/action-group-schema.json')
+    });
+
+    actionGroup.actionGroup.addDependency(agent.agent);
+    agent.alias.addDependency(actionGroup.actionGroup);
+
+    new cdk.CfnOutput(this, 'AgentId', {
+      value: agent.agent.attrAgentId,
+      description: 'Bedrock Agent ID'
+    });
+
+    new cdk.CfnOutput(this, 'AgentAliasId', {
+      value: agent.alias.attrAgentAliasId,
+      description: 'Bedrock Agent Alias ID'
+    });
+
+    new cdk.CfnOutput(this, 'AgentArn', {
+      value: agent.agent.attrAgentArn,
+      description: 'Bedrock Agent ARN'
+    });
+
+    new cdk.CfnOutput(this, 'LambdaArn', {
+      value: actionHandlerLambda.function.functionArn,
+      description: 'Action Handler Lambda ARN'
+    });
   }
 }
