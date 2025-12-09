@@ -1,17 +1,12 @@
-// import * as cdk from 'aws-cdk-lib/core';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as Cdk from '../lib/cdk-stack';
+// This file is kept for backwards compatibility
+// All tests have been moved to dedicated test files:
+// - cdk-stack.test.ts - Main stack tests
+// - lambda-handler.test.ts - Lambda function tests
+// - constructs.test.ts - Construct unit tests
+// - config.test.ts - Configuration tests
+// - schema.test.ts - Schema validation tests
 
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/cdk-stack.ts
-test('SQS Queue Created', () => {
-//   const app = new cdk.App();
-//     // WHEN
-//   const stack = new Cdk.CdkStack(app, 'MyTestStack');
-//     // THEN
-//   const template = Template.fromStack(stack);
-
-//   template.hasResourceProperties('AWS::SQS::Queue', {
-//     VisibilityTimeout: 300
-//   });
+// Placeholder test to satisfy Jest requirement
+test('test suite placeholder', () => {
+  expect(true).toBe(true);
 });
