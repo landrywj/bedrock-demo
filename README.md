@@ -50,6 +50,8 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 ## Project Structure
 
+```
+
 bedrock-demo/
 ├── lib/
 │   ├── constructs/
@@ -67,3 +69,5 @@ bedrock-demo/
 │   └── action-group-schema.json      # OpenAPI 3.0 schema
 └── test/
     └── cdk.test.ts                   # Unit tests
+
+    ```
