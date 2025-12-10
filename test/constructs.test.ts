@@ -206,10 +206,10 @@ describe('ActionGroup Construct', () => {
     });
   });
 
-  test('creates action group with provided properties', () => {
+  test('creates action group property with provided properties', () => {
     // Skip if Bedrock constructs are not available
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
-      console.warn('Skipping test: Bedrock CfnAgentActionGroup not available');
+    if (!bedrock || !bedrock.CfnAgent) {
+      console.warn('Skipping test: Bedrock CfnAgent not available');
       return;
     }
 
@@ -221,30 +221,23 @@ describe('ActionGroup Construct', () => {
     }
 
     const actionGroup = new ActionGroup(stack, 'TestActionGroup', {
-      agentId: 'test-agent-id',
-      agentVersion: 'DRAFT',
       actionGroupName: 'TestActionGroup',
       description: 'Test description',
       lambdaFunction: testLambda,
       schemaPath: schemaPath
     });
 
-    template = Template.fromStack(stack);
-
-    template.hasResourceProperties('AWS::Bedrock::AgentActionGroup', {
-      AgentId: 'test-agent-id',
-      AgentVersion: 'DRAFT',
-      ActionGroupName: 'TestActionGroup',
-      Description: 'Test description'
-    });
-
-    expect(actionGroup.actionGroup).toBeDefined();
+    expect(actionGroup.actionGroupProperty).toBeDefined();
+    expect(actionGroup.actionGroupProperty.actionGroupName).toBe('TestActionGroup');
+    expect(actionGroup.actionGroupProperty.description).toBe('Test description');
+    expect(actionGroup.actionGroupProperty.actionGroupExecutor).toBeDefined();
+    expect(actionGroup.actionGroupProperty.apiSchema).toBeDefined();
   });
 
   test('reads and includes OpenAPI schema', () => {
     // Skip if Bedrock constructs are not available
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
-      console.warn('Skipping test: Bedrock CfnAgentActionGroup not available');
+    if (!bedrock || !bedrock.CfnAgent) {
+      console.warn('Skipping test: Bedrock CfnAgent not available');
       return;
     }
 
@@ -255,28 +248,21 @@ describe('ActionGroup Construct', () => {
       throw new Error(`Schema file not found: ${schemaPath}`);
     }
 
-    new ActionGroup(stack, 'TestActionGroup', {
-      agentId: 'test-agent-id',
-      agentVersion: 'DRAFT',
+    const actionGroup = new ActionGroup(stack, 'TestActionGroup', {
       actionGroupName: 'TestActionGroup',
       description: 'Test description',
       lambdaFunction: testLambda,
       schemaPath: schemaPath
     });
 
-    template = Template.fromStack(stack);
-
-    template.hasResourceProperties('AWS::Bedrock::AgentActionGroup', {
-      ApiSchema: {
-        Payload: Match.stringLikeRegexp('openapi')
-      }
-    });
+    expect(actionGroup.actionGroupProperty.apiSchema).toBeDefined();
+    expect(actionGroup.actionGroupProperty.apiSchema?.payload).toContain('openapi');
   });
 
   test('configures Lambda function as executor', () => {
     // Skip if Bedrock constructs are not available
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
-      console.warn('Skipping test: Bedrock CfnAgentActionGroup not available');
+    if (!bedrock || !bedrock.CfnAgent) {
+      console.warn('Skipping test: Bedrock CfnAgent not available');
       return;
     }
 
@@ -287,35 +273,26 @@ describe('ActionGroup Construct', () => {
       throw new Error(`Schema file not found: ${schemaPath}`);
     }
 
-    new ActionGroup(stack, 'TestActionGroup', {
-      agentId: 'test-agent-id',
-      agentVersion: 'DRAFT',
+    const actionGroup = new ActionGroup(stack, 'TestActionGroup', {
       actionGroupName: 'TestActionGroup',
       description: 'Test description',
       lambdaFunction: testLambda,
       schemaPath: schemaPath
     });
 
-    template = Template.fromStack(stack);
-
-    template.hasResourceProperties('AWS::Bedrock::AgentActionGroup', {
-      ActionGroupExecutor: {
-        Lambda: Match.anyValue()
-      }
-    });
+    expect(actionGroup.actionGroupProperty.actionGroupExecutor).toBeDefined();
+    expect(actionGroup.actionGroupProperty.actionGroupExecutor?.lambda).toBeDefined();
   });
 
   test('throws error if schema file does not exist', () => {
     // Skip if Bedrock constructs are not available
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
-      console.warn('Skipping test: Bedrock CfnAgentActionGroup not available');
+    if (!bedrock || !bedrock.CfnAgent) {
+      console.warn('Skipping test: Bedrock CfnAgent not available');
       return;
     }
 
     expect(() => {
       new ActionGroup(stack, 'TestActionGroup', {
-        agentId: 'test-agent-id',
-        agentVersion: 'DRAFT',
         actionGroupName: 'TestActionGroup',
         description: 'Test description',
         lambdaFunction: testLambda,
