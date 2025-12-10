@@ -8,6 +8,7 @@ export interface BedrockAgentProps {
   instruction: string;
   foundationModel: string;
   idleSessionTTL: number;
+  actionGroups?: bedrock.CfnAgent.AgentActionGroupProperty[];
 }
 
 export class BedrockAgent extends Construct {
@@ -30,7 +31,8 @@ export class BedrockAgent extends Construct {
       agentResourceRoleArn: this.agentRole.roleArn,
       foundationModel: props.foundationModel,
       instruction: props.instruction,
-      idleSessionTtlInSeconds: props.idleSessionTTL
+      idleSessionTtlInSeconds: props.idleSessionTTL,
+      actionGroups: props.actionGroups
     });
 
     this.alias = new bedrock.CfnAgentAlias(this, 'AgentAlias', {

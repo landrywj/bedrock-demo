@@ -4,8 +4,6 @@ import { Construct } from 'constructs';
 import * as fs from 'fs';
 
 export interface ActionGroupProps {
-  agentId: string;
-  agentVersion: string;
   actionGroupName: string;
   description: string;
   lambdaFunction: lambda.IFunction;
@@ -13,16 +11,14 @@ export interface ActionGroupProps {
 }
 
 export class ActionGroup extends Construct {
-  public readonly actionGroup: bedrock.CfnAgentActionGroup;
+  public readonly actionGroupProperty: bedrock.CfnAgent.AgentActionGroupProperty;
 
   constructor(scope: Construct, id: string, props: ActionGroupProps) {
     super(scope, id);
 
     const schema = JSON.parse(fs.readFileSync(props.schemaPath, 'utf-8'));
 
-    this.actionGroup = new bedrock.CfnAgentActionGroup(this, 'ActionGroup', {
-      agentId: props.agentId,
-      agentVersion: props.agentVersion,
+    this.actionGroupProperty = {
       actionGroupName: props.actionGroupName,
       description: props.description,
       actionGroupExecutor: {
@@ -31,6 +27,6 @@ export class ActionGroup extends Construct {
       apiSchema: {
         payload: JSON.stringify(schema)
       }
-    });
+    };
   }
 }

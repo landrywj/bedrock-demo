@@ -16,11 +16,19 @@ export class CdkStack extends cdk.Stack {
       codePath: path.join(__dirname, '../lambda/action-handler')
     });
 
+    const actionGroup = new ActionGroup(this, 'CustomerServiceActions', {
+      actionGroupName: 'CustomerServiceActionGroup',
+      description: 'Actions for customer service operations',
+      lambdaFunction: actionHandlerLambda.function,
+      schemaPath: path.join(__dirname, '../schemas/action-group-schema.json')
+    });
+
     const agent = new BedrockAgent(this, 'BedrockAgent', {
       agentName: AgentConfig.agentName,
       instruction: AgentConfig.instruction,
       foundationModel: AgentConfig.foundationModel,
-      idleSessionTTL: AgentConfig.idleSessionTTL
+      idleSessionTTL: AgentConfig.idleSessionTTL,
+      actionGroups: [actionGroup.actionGroupProperty]
     });
 
     actionHandlerLambda.function.grantInvoke(agent.agentRole);
@@ -29,18 +37,6 @@ export class CdkStack extends cdk.Stack {
       principal: new cdk.aws_iam.ServicePrincipal('bedrock.amazonaws.com'),
       sourceArn: agent.agent.attrAgentArn
     });
-
-    const actionGroup = new ActionGroup(this, 'CustomerServiceActions', {
-      agentId: agent.agent.attrAgentId,
-      agentVersion: 'DRAFT',
-      actionGroupName: 'CustomerServiceActionGroup',
-      description: 'Actions for customer service operations',
-      lambdaFunction: actionHandlerLambda.function,
-      schemaPath: path.join(__dirname, '../schemas/action-group-schema.json')
-    });
-
-    actionGroup.actionGroup.addDependency(agent.agent);
-    agent.alias.addDependency(actionGroup.actionGroup);
 
     new cdk.CfnOutput(this, 'AgentId', {
       value: agent.agent.attrAgentId,

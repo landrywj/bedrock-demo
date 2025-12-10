@@ -20,7 +20,7 @@ describe('CdkStack', () => {
   beforeEach(() => {
     // Skip stack creation if Bedrock constructs aren't available
     // This prevents test failures when constructs aren't in the CDK version
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       return;
     }
     
@@ -30,7 +30,7 @@ describe('CdkStack', () => {
   });
 
   test('Lambda function is created with correct properties', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -45,7 +45,7 @@ describe('CdkStack', () => {
   });
 
   test('Lambda function has CloudWatch Logs retention', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -63,7 +63,7 @@ describe('CdkStack', () => {
   });
 
   test('Bedrock Agent is created with correct properties', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -76,7 +76,7 @@ describe('CdkStack', () => {
   });
 
   test('Bedrock Agent has IAM role', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -97,7 +97,7 @@ describe('CdkStack', () => {
   });
 
   test('Agent role has Bedrock full access policy', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -119,7 +119,7 @@ describe('CdkStack', () => {
   });
 
   test('Agent alias is created', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -130,45 +130,57 @@ describe('CdkStack', () => {
   });
 
   test('Action Group is created with correct properties', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
     
-    template.hasResourceProperties('AWS::Bedrock::AgentActionGroup', {
-      ActionGroupName: 'CustomerServiceActionGroup',
-      Description: 'Actions for customer service operations'
+    template.hasResourceProperties('AWS::Bedrock::Agent', {
+      ActionGroups: Match.arrayWith([
+        Match.objectLike({
+          ActionGroupName: 'CustomerServiceActionGroup',
+          Description: 'Actions for customer service operations'
+        })
+      ])
     });
   });
 
   test('Action Group has Lambda executor', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
     
-    template.hasResourceProperties('AWS::Bedrock::AgentActionGroup', {
-      ActionGroupExecutor: {
-        Lambda: Match.anyValue()
-      }
+    template.hasResourceProperties('AWS::Bedrock::Agent', {
+      ActionGroups: Match.arrayWith([
+        Match.objectLike({
+          ActionGroupExecutor: {
+            Lambda: Match.anyValue()
+          }
+        })
+      ])
     });
   });
 
   test('Action Group has API schema', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
     
-    template.hasResourceProperties('AWS::Bedrock::AgentActionGroup', {
-      ApiSchema: {
-        Payload: Match.anyValue()
-      }
+    template.hasResourceProperties('AWS::Bedrock::Agent', {
+      ActionGroups: Match.arrayWith([
+        Match.objectLike({
+          ApiSchema: {
+            Payload: Match.anyValue()
+          }
+        })
+      ])
     });
   });
 
   test('Lambda has permission for Bedrock to invoke', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -180,7 +192,7 @@ describe('CdkStack', () => {
   });
 
   test('Agent role can invoke Lambda function', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -199,7 +211,7 @@ describe('CdkStack', () => {
   });
 
   test('Stack outputs Agent ID', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -210,7 +222,7 @@ describe('CdkStack', () => {
   });
 
   test('Stack outputs Agent Alias ID', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -221,7 +233,7 @@ describe('CdkStack', () => {
   });
 
   test('Stack outputs Agent ARN', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -232,7 +244,7 @@ describe('CdkStack', () => {
   });
 
   test('Stack outputs Lambda ARN', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
@@ -242,30 +254,32 @@ describe('CdkStack', () => {
     });
   });
 
-  test('Action Group depends on Agent', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+  test('Agent has Action Groups defined', () => {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
     
-    const actionGroup = template.findResources('AWS::Bedrock::AgentActionGroup');
-    const agent = template.findResources('AWS::Bedrock::Agent');
-    
-    expect(Object.keys(actionGroup).length).toBeGreaterThan(0);
-    expect(Object.keys(agent).length).toBeGreaterThan(0);
+    template.hasResourceProperties('AWS::Bedrock::Agent', {
+      ActionGroups: Match.arrayWith([
+        Match.objectLike({
+          ActionGroupName: 'CustomerServiceActionGroup'
+        })
+      ])
+    });
   });
 
-  test('Agent Alias depends on Action Group', () => {
-    if (!bedrock || !bedrock.CfnAgentActionGroup) {
+  test('Agent Alias depends on Agent', () => {
+    if (!bedrock || !bedrock.CfnAgent) {
       console.warn('Skipping test: Bedrock constructs not available');
       return;
     }
     
     const alias = template.findResources('AWS::Bedrock::AgentAlias');
-    const actionGroup = template.findResources('AWS::Bedrock::AgentActionGroup');
+    const agent = template.findResources('AWS::Bedrock::Agent');
     
     expect(Object.keys(alias).length).toBeGreaterThan(0);
-    expect(Object.keys(actionGroup).length).toBeGreaterThan(0);
+    expect(Object.keys(agent).length).toBeGreaterThan(0);
   });
 });
 
