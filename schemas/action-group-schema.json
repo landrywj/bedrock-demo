@@ -1,90 +1,41 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Customer Service API",
+    "title": "Hello World API",
     "version": "1.0.0",
-    "description": "API for customer service operations"
+    "description": "Simple API for greeting functionality"
   },
   "paths": {
-    "/checkOrderStatus": {
+    "/sayHello": {
       "post": {
-        "summary": "Check the status of an order",
-        "description": "Retrieves the current status and estimated delivery date for a given order ID",
-        "operationId": "checkOrderStatus",
+        "summary": "Say hello",
+        "description": "Returns a friendly greeting message",
+        "operationId": "sayHello",
         "requestBody": {
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "orderId": {
+                  "name": {
                     "type": "string",
-                    "description": "The unique order identifier"
-                  }
-                },
-                "required": ["orderId"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Order status retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "orderId": { "type": "string" },
-                    "status": { "type": "string" },
-                    "estimatedDelivery": { "type": "string" }
+                    "description": "Optional name to include in the greeting"
                   }
                 }
               }
             }
           }
-        }
-      }
-    },
-    "/processReturn": {
-      "post": {
-        "summary": "Process a product return",
-        "description": "Initiates a return for a given order with a reason",
-        "operationId": "processReturn",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "orderId": {
-                    "type": "string",
-                    "description": "The order ID to return"
-                  },
-                  "reason": {
-                    "type": "string",
-                    "description": "Reason for the return"
-                  }
-                },
-                "required": ["orderId", "reason"]
-              }
-            }
-          }
         },
         "responses": {
           "200": {
-            "description": "Return processed successfully",
+            "description": "Greeting returned successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "orderId": { "type": "string" },
-                    "returnId": { "type": "string" },
-                    "status": { "type": "string" },
-                    "reason": { "type": "string" }
+                    "message": { "type": "string" }
                   }
                 }
               }
