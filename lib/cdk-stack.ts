@@ -16,9 +16,9 @@ export class CdkStack extends cdk.Stack {
       codePath: path.join(__dirname, '../lambda/action-handler')
     });
 
-    const actionGroup = new ActionGroup(this, 'CustomerServiceActions', {
-      actionGroupName: 'CustomerServiceActionGroup',
-      description: 'Actions for customer service operations',
+    const actionGroup = new ActionGroup(this, 'HelloWorldActions', {
+      actionGroupName: 'HelloWorldActionGroup',
+      description: 'Simple hello world action for testing',
       lambdaFunction: actionHandlerLambda.function,
       schemaPath: path.join(__dirname, '../schemas/action-group-schema.json')
     });

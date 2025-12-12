@@ -8,13 +8,12 @@ export const handler = async (event: BedrockAgentEvent): Promise<BedrockAgentRes
   let result: any;
 
   try {
-    if (apiPath === '/checkOrderStatus') {
-      const orderId = parameters.find(p => p.name === 'orderId')?.value;
-      result = { orderId, status: 'Shipped', estimatedDelivery: '2024-01-15' };
-    } else if (apiPath === '/processReturn') {
-      const orderId = parameters.find(p => p.name === 'orderId')?.value;
-      const reason = parameters.find(p => p.name === 'reason')?.value;
-      result = { orderId, returnId: 'RET-' + Date.now(), status: 'Approved', reason };
+    if (apiPath === '/sayHello') {
+      const name = parameters.find(p => p.name === 'name')?.value;
+      const greeting = name 
+        ? `Hello, ${name}! Welcome to AWS Bedrock Agent.`
+        : 'Hello, World! Welcome to AWS Bedrock Agent.';
+      result = { message: greeting };
     } else {
       throw new Error(`Unknown API path: ${apiPath}`);
     }

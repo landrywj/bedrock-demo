@@ -15,6 +15,12 @@ export class AgentLambda extends Construct {
   constructor(scope: Construct, id: string, props: AgentLambdaProps) {
     super(scope, id);
 
+    const logGroup = new logs.LogGroup(this, 'LogGroup', {
+      logGroupName: `/aws/lambda/${props.functionName}`,
+      retention: logs.RetentionDays.ONE_WEEK,
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
+
     this.function = new lambda.Function(this, 'Function', {
       functionName: props.functionName,
       runtime: lambda.Runtime.NODEJS_20_X,
@@ -22,7 +28,7 @@ export class AgentLambda extends Construct {
       code: lambda.Code.fromAsset(props.codePath),
       timeout: cdk.Duration.seconds(LambdaConfig.timeout),
       memorySize: LambdaConfig.memorySize,
-      logRetention: logs.RetentionDays.ONE_WEEK
+      logGroup: logGroup
     });
   }
 }
