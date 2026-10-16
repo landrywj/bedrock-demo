@@ -69,9 +69,10 @@ describe('CdkStack', () => {
     }
     template.hasResourceProperties('AWS::Bedrock::Agent', {
       AgentName: 'BedrockDemoAgent',
-      FoundationModel: 'anthropic.claude-3-sonnet-20240229-v1:0',
+      FoundationModel: 'us.anthropic.claude-sonnet-4-6',
       Instruction: Match.stringLikeRegexp('customer service agent'),
-      IdleSessionTtlInSeconds: 600
+      IdleSessionTTLInSeconds: 600,
+      AutoPrepare: true
     });
   });
 
@@ -139,7 +140,8 @@ describe('CdkStack', () => {
       ActionGroups: Match.arrayWith([
         Match.objectLike({
           ActionGroupName: 'CustomerServiceActionGroup',
-          Description: 'Actions for customer service operations'
+          Description: 'Actions for customer service operations',
+          ActionGroupState: 'ENABLED'
         })
       ])
     });

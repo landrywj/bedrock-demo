@@ -4,7 +4,7 @@ This document describes the comprehensive test suite for the AWS Bedrock Agent C
 
 ## Test Coverage
 
-The test suite includes **59 tests** across **6 test files**, providing comprehensive coverage of:
+The test suite includes **60 tests** across **6 test files**, providing comprehensive coverage of:
 
 ### 1. CDK Stack Tests (`test/cdk-stack.test.ts`)
 Tests the main CDK stack that orchestrates all resources:
@@ -20,14 +20,14 @@ Tests the main CDK stack that orchestrates all resources:
 
 ### 2. Lambda Handler Tests (`test/lambda-handler.test.ts`)
 Unit tests for the Lambda function business logic:
-- `/checkOrderStatus` endpoint with valid and missing parameters
-- `/processReturn` endpoint with various scenarios
+- `/checkOrderStatus` endpoint with a request body, a parameters fallback, and a missing order ID
+- `/processReturn` endpoint with a request body and a missing reason
 - Error handling for unknown API paths
 - Response format validation (Bedrock Agent format compliance)
 - Unique return ID generation
 - Parameter extraction logic
 
-**13 tests** covering Lambda function behavior.
+**10 tests** covering Lambda function behavior.
 
 ### 3. Construct Tests (`test/constructs.test.ts`)
 Unit tests for individual CDK constructs:
@@ -35,7 +35,7 @@ Unit tests for individual CDK constructs:
 - **AgentLambda Construct**: Lambda function configuration, log retention
 - **ActionGroup Construct**: Schema reading, Lambda executor configuration
 
-**9 tests** covering construct functionality.
+**11 tests** covering construct functionality.
 
 ### 4. Configuration Tests (`test/config.test.ts`)
 Validates configuration constants:
@@ -43,7 +43,7 @@ Validates configuration constants:
 - Lambda configuration (timeout, memory, runtime)
 - Value validation (positive numbers, valid formats)
 
-**8 tests** covering configuration validation.
+**10 tests** covering configuration validation.
 
 ### 5. Schema Tests (`test/schema.test.ts`)
 Validates the OpenAPI 3.0 schema file:
@@ -53,7 +53,7 @@ Validates the OpenAPI 3.0 schema file:
 - Request/response schema validation
 - Required fields and data types
 
-**12 tests** covering schema validation.
+**11 tests** covering schema validation.
 
 ### 6. Placeholder Test (`test/cdk.test.ts`)
 Maintains backwards compatibility with the original test file structure.

@@ -1,6 +1,8 @@
 export const AgentConfig = {
   agentName: 'BedrockDemoAgent',
-  foundationModel: 'anthropic.claude-3-sonnet-20240229-v1:0',
+  // US geographic inference profile. Claude Sonnet 4.6 is not available on-demand.
+  // Use the eu., jp., or global. prefix when deploying outside US regions.
+  foundationModel: 'us.anthropic.claude-sonnet-4-6',
   instruction: 'You are a helpful customer service agent. You can check order status, process returns, and answer product questions. Be concise and professional.',
   idleSessionTTL: 600,
   aliasName: 'prod'

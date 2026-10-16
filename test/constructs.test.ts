@@ -31,7 +31,8 @@ describe('BedrockAgent Construct', () => {
       AgentName: 'TestAgentName',
       Instruction: Match.stringLikeRegexp('Test instruction'),
       FoundationModel: 'anthropic.claude-3-haiku-20240307-v1:0',
-      IdleSessionTTLInSeconds: 300
+      IdleSessionTTLInSeconds: 300,
+      AutoPrepare: true
     });
 
     expect(bedrockAgent.agent).toBeDefined();
@@ -230,6 +231,7 @@ describe('ActionGroup Construct', () => {
     expect(actionGroup.actionGroupProperty).toBeDefined();
     expect(actionGroup.actionGroupProperty.actionGroupName).toBe('TestActionGroup');
     expect(actionGroup.actionGroupProperty.description).toBe('Test description');
+    expect(actionGroup.actionGroupProperty.actionGroupState).toBe('ENABLED');
     expect(actionGroup.actionGroupProperty.actionGroupExecutor).toBeDefined();
     expect(actionGroup.actionGroupProperty.apiSchema).toBeDefined();
   });
@@ -255,8 +257,12 @@ describe('ActionGroup Construct', () => {
       schemaPath: schemaPath
     });
 
-    expect(actionGroup.actionGroupProperty.apiSchema).toBeDefined();
-    expect(actionGroup.actionGroupProperty.apiSchema?.payload).toContain('openapi');
+    const schema = actionGroup.actionGroupProperty.apiSchema;
+    expect(schema).toBeDefined();
+    if (!schema || !('payload' in schema)) {
+      throw new Error('Expected an inline OpenAPI schema payload');
+    }
+    expect(schema.payload).toContain('openapi');
   });
 
   test('configures Lambda function as executor', () => {
@@ -280,8 +286,12 @@ describe('ActionGroup Construct', () => {
       schemaPath: schemaPath
     });
 
-    expect(actionGroup.actionGroupProperty.actionGroupExecutor).toBeDefined();
-    expect(actionGroup.actionGroupProperty.actionGroupExecutor?.lambda).toBeDefined();
+    const executor = actionGroup.actionGroupProperty.actionGroupExecutor;
+    expect(executor).toBeDefined();
+    if (!executor || !('lambda' in executor)) {
+      throw new Error('Expected a Lambda action group executor');
+    }
+    expect(executor.lambda).toBeDefined();
   });
 
   test('throws error if schema file does not exist', () => {
