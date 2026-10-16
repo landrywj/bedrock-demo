@@ -16,10 +16,8 @@ describe('Configuration', () => {
       expect(AgentConfig.agentName.length).toBeGreaterThan(0);
     });
 
-    test('foundationModel is valid Bedrock model ID', () => {
-      expect(AgentConfig.foundationModel).toBeDefined();
-      expect(typeof AgentConfig.foundationModel).toBe('string');
-      expect(AgentConfig.foundationModel).toMatch(/^anthropic\.claude/);
+    test('foundationModel is a Bedrock inference profile ID', () => {
+      expect(AgentConfig.foundationModel).toBe('us.anthropic.claude-sonnet-4-6');
     });
 
     test('instruction is defined and non-empty', () => {

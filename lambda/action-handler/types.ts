@@ -1,3 +1,9 @@
+export interface BedrockParameter {
+  name: string;
+  type: string;
+  value: string;
+}
+
 export interface BedrockAgentEvent {
   messageVersion: string;
   agent: {
@@ -11,11 +17,14 @@ export interface BedrockAgentEvent {
   actionGroup: string;
   apiPath: string;
   httpMethod: string;
-  parameters: Array<{
-    name: string;
-    type: string;
-    value: string;
-  }>;
+  parameters?: BedrockParameter[];
+  requestBody?: {
+    content?: {
+      [contentType: string]: {
+        properties?: BedrockParameter[];
+      };
+    };
+  };
 }
 
 export interface BedrockAgentResponse {

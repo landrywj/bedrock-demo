@@ -32,6 +32,7 @@ export class BedrockAgent extends Construct {
       foundationModel: props.foundationModel,
       instruction: props.instruction,
       idleSessionTtlInSeconds: props.idleSessionTTL,
+      autoPrepare: true,
       actionGroups: props.actionGroups
     });
 

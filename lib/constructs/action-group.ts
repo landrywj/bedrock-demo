@@ -21,6 +21,7 @@ export class ActionGroup extends Construct {
     this.actionGroupProperty = {
       actionGroupName: props.actionGroupName,
       description: props.description,
+      actionGroupState: 'ENABLED',
       actionGroupExecutor: {
         lambda: props.lambdaFunction.functionArn
       },
